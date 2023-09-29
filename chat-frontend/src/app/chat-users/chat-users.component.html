@@ -1,0 +1,47 @@
+<!-- chat-users.component.html -->
+<div class="card-body contacts_body">
+  <div class="settings-tray bd-highlight">
+    <img
+      class="profile-image"
+      src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg"
+      alt="Profile img"
+    />
+    <span class="settings-tray--right">
+      <i class="fa fa-cog"></i>
+    </span>
+    <span class="settings-tray--right">
+      <p class="profile-imaget">User</p>
+    </span>
+  </div>
+
+  <div class="col">
+    <div class="card-header">
+      <div class="input-group align-items-center">
+        <input
+          type="text"
+          placeholder="Search..."
+          name=""
+          class="form-control search"
+          [(ngModel)]="searchText"
+        />
+        <div class="input-group-prepend">
+          <span class="input-group-text search_btn" (click)="onClick()">
+            <i class="fa fa-search"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <ul class="list-unstyled mb-0">
+          <app-chat-user *ngFor="let chatUser of chats?.conversations" [user]="users?.[chatUser.id]"
+          [id]="chatUser.id"></app-chat-user>
+
+
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

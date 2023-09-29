@@ -1,0 +1,15 @@
+
+<div class="container1">
+    <li class="active rad" (click)="selectedClick()">
+        <div class="d-flex bd-highlight">
+            <div class="img_cont">
+              <img [src]="user?.avatar" class="rounded-circle user_img">
+                <span class="online_icon"></span>
+            </div>
+            <div class="user_info">
+                <span>{{user?.name}}</span>
+               
+            </div>
+        </div>
+    </li>
+</div>

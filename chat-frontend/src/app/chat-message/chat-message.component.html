@@ -1,0 +1,30 @@
+<div
+  *ngIf="message?.recipientId == targetUserID"
+  class="d-flex justify-content-start mb-4"
+>
+  <div class="img_cont_msg">
+    <img
+      src={{user?.avatar}}
+      class="rounded-circle user_img_msg"
+    />
+  </div>
+  <div class="msg_cotainer">
+    {{ message?.text }}
+    <span class="msg_time">8:40 AM, Today</span>
+  </div>
+</div>
+<div
+  *ngIf="message?.recipientId != targetUserID"
+  class="d-flex justify-content-end mb-4"
+>
+  <div class="msg_cotainer_send">
+    {{ message?.text }}
+    <span class="msg_time_send">8:55 AM, Today</span>
+  </div>
+  <div class="img_cont_msg">
+    <img
+    src={{user?.avatar}}
+      class="rounded-circle user_img_msg"
+    />
+  </div>
+</div>
