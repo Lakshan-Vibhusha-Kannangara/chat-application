@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "VTDzJHobfQ4CE3BuBkf8WlDY/9Ka5nqZocTu+2LbON0NX5qTVr+6O+2kLxTPAVIJnmNhZJAZwYCwY0pVM7q6dQ==",
+  "success": true,
+  "projectFilePath": "/Users/vibhushakannangara/Documents/VSCODE/chat-application/chat-backend/chat-backend.csproj",
+  "expectedPackageFiles": [
+    "/Users/vibhushakannangara/.nuget/packages/microsoft.aspnetcore.openapi/7.0.11/microsoft.aspnetcore.openapi.7.0.11.nupkg.sha512",
+    "/Users/vibhushakannangara/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "/Users/vibhushakannangara/.nuget/packages/microsoft.openapi/1.4.3/microsoft.openapi.1.4.3.nupkg.sha512",
+    "/Users/vibhushakannangara/.nuget/packages/swashbuckle.aspnetcore/6.5.0/swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
+    "/Users/vibhushakannangara/.nuget/packages/swashbuckle.aspnetcore.swagger/6.5.0/swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
+    "/Users/vibhushakannangara/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.5.0/swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
+    "/Users/vibhushakannangara/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.5.0/swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
