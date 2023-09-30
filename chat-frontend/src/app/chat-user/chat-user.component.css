@@ -234,3 +234,10 @@ margin-bottom: 15px !important;
 .rad{
 border-radius: 5px;
 }
+.user_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center; /* Center the image within the container */
+    border-radius: 50%; /* Apply a rounded shape for a circular image */
+  }

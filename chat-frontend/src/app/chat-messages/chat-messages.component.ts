@@ -1,58 +1,149 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { ChatData, ChatMessage, ChatUser, User } from '../../utilites/interfaces/interface'; 
-import { StateService } from '../state.service';
-import { Observable, Subscription } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChatData,
+  ChatMessage,
+  ChatUser,
+  User,
+} from '../../utilites/interfaces/interface';
+import { StateService } from '../../../Services/state.service';
+import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { ApiService } from 'Services/api.service';
 
 @Component({
   selector: 'app-chat-messages',
   templateUrl: './chat-messages.component.html',
   styleUrls: ['./chat-messages.component.css'],
 })
-export class ChatMessagesComponent implements OnInit, OnDestroy {
-  chats: Observable<ChatData> | undefined;
-  users:  { [key: number]: User } | undefined; 
-  userName:string='';
-  userId:number=0;
-  targetUserId: number | undefined;
-  targetUser: ChatUser | undefined;
-  targetMessages: ChatMessage[] = [];
-  private selectedUserSubscription: Subscription;
+export class ChatMessagesComponent implements OnInit {
+  chats: ChatData = { conversations: [] };
+  fileString!: string;
+  textMessage = '';
+  users: { [key: number]: User } = {};
+  userName = '';
+  targetUserId!: number;
+  messagesForm!: FormGroup;
+  filteredMessages: ChatMessage[] = [];
+  selectedFileName: string = '';
 
-  constructor(private stateService: StateService) {
-    this.selectedUserSubscription = this.stateService.selectedUser$.subscribe((user) => {
-      this.targetUserId = user;
-      this.updateTargetUserAndMessages();
-    });
+  constructor(private stateService: StateService, private api: ApiService) {}
+
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    this.selectedFileName = file.name;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+  
+        this.fileString = e.target.result;
+        console.log(e.target.result)
+        
+      };
+      reader.readAsDataURL(file);
+    }
+ 
   }
-
   ngOnInit() {
-   this.userName= this.stateService.userName;
-   this.userId= this.stateService.userId;
-    this.chats = this.stateService.chats$;
-    this.stateService.users$.subscribe((users) => {
-      this.users = users;
-      this.updateTargetUserAndMessages();
-      console.log("users in here", this.users);
+    this.initForm();
+
+    this.stateService.selectedUser$.subscribe((user) => {
+      this.resetChatState();
+      this.targetUserId = user!;
+      this.stateService.users$.subscribe((users) => {
+        this.users = users;
+        this.stateService.chats$.subscribe((chats: ChatData) => {
+          this.chats = chats;
+       
+          this.updateTargetUserAndMessages();
+        });
+      });
+    });
+
+    this.userName = this.stateService.userName;
+    this.targetUserId = this.stateService.userId;
+
+    this.stateService.search$.subscribe(() => {
+      this.resetChatState();
     });
   }
 
-  ngOnDestroy() {
-    this.selectedUserSubscription.unsubscribe();
+  initForm() {
+    this.messagesForm = new FormGroup({
+      messages: new FormArray([]),
+    });
   }
 
-  private updateTargetUserAndMessages() {
-    if (this.chats && this.users) {
-      this.chats.subscribe((data) => {
-        this.targetUser = data.conversations.find((user: ChatUser) => user.id === this.targetUserId);
+  resetChatState() {
+    this.filteredMessages = [];
+    this.chats = { conversations: [] };
+    this.targetUserId = -1;
+    this.initForm();
+  }
 
-        if (this.targetUser) {
-          this.targetMessages = this.targetUser.messages;
-        } else {
-          this.targetMessages = [];
+  Sending() {
+    const targetUserChat = this.chats.conversations.find(
+      (chatUser) => chatUser.id === this.targetUserId
+    );
+    const messageArray = this.messagesForm.get('messages') as FormArray;
+    this.api
+      .postMessage({
+        text: this.textMessage,
+        senderId: this.stateService.userId,
+        recipientId: this.targetUserId,
+        timestamp: '2023-09-30T12:00:00',
+        attachment:this.fileString
+      })
+      .subscribe((post: ChatMessage) => {
+        const control = new FormControl({
+          id: 0,
+          text: post.text,
+          selected: false,
+          senderId: post.senderId,
+          recipientId: post.recipientId,
+          timestamp: post.timestamp,
+          attachment:this.fileString
+        });
+        targetUserChat?.messages.push({
+          id: 0,
+          text: post.text,
+          senderId: post.senderId,
+          recipientId: post.recipientId,
+          timestamp: post.timestamp,
+          attachment:this.fileString
+        });
+        messageArray.push(control);
+        this.textMessage = '';
+      });
+
+      this.selectedFileName="";
+  }
+
+  onSubmit() {
+    // Handle form submission logic here
+  }
+
+  updateTargetUserAndMessages() {
+    const targetUserChat = this.chats.conversations.find(
+      (chatUser) => chatUser.id === this.targetUserId
+    );
+    if (targetUserChat) {
+      this.filteredMessages = targetUserChat.messages;
+      const messageArray = this.messagesForm.get('messages') as FormArray;
+      messageArray.clear();
+      targetUserChat.messages.forEach((message: ChatMessage, index: number) => {
+        if (message !== undefined) {
+          const control = new FormControl({
+            id: index,
+            text: message.text,
+            selected: false,
+            senderId: message.senderId,
+            recipientId: message.recipientId,
+            timestamp: message.timestamp,
+            attachment:message.attachment
+          });
+          messageArray.push(control);
         }
       });
-    } else {
-      this.targetMessages = [];
     }
   }
 }

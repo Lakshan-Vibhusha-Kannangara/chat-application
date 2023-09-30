@@ -1,0 +1,67 @@
+<div class="area">
+  <ul class="circles">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+</div>
+
+<div class="login-box">
+  <h2>Web-Chat</h2>
+
+  <p style="color: #3d3d4a" class="have-account">
+    Have an account?
+    <a routerLink="/login" style="color: #24252c">Login here</a>
+  </p>
+
+  <form [formGroup]="this.signUpForm" (ngSubmit)="onSubmit()">
+
+    <app-image-upload     (dataToParent)="onImageSelect($event)"></app-image-upload>
+    <div class="user-box">
+      <app-form-input
+        label="Email"
+        [control]="$any(this.signUpForm.get('fullName'))"
+        placeholder="Full Name"
+        [required]="true"
+        [icon]="'fa fa-user'"
+      ></app-form-input>
+    </div>
+    <div class="user-box">
+      <app-form-input
+        label="Email"
+        [control]="$any(this.signUpForm.get('emailId'))"
+        placeholder="Email"
+        [required]="true"
+        [icon]="'fa fa-envelope'"
+      ></app-form-input>
+</div>
+      <div class="user-box">
+        <app-form-input
+          [type]="'password'"
+          label="Password"
+          [control]="$any(this.signUpForm.get('password'))"
+          placeholder="Password"
+          [required]="true"
+          [icon]="'fa fa-key'"
+        ></app-form-input>
+      </div>
+
+   
+      <div class="spans" type="button" (click)="onClick()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        Sign Up
+      </div>
+    
+  
+  </form>
+</div>

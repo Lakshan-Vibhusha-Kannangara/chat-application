@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { User } from '../../utilites/interfaces/interface';
-import { StateService } from '../state.service';
+import { StateService } from '../../../Services/state.service';
 
 @Component({
   selector: 'app-chat-user',
@@ -9,7 +9,8 @@ import { StateService } from '../state.service';
 })
 export class ChatUserComponent {
   @Input() user: User | undefined;
-  @Input() id: number | undefined;
+  @Input()
+  id!: number;
   selected: boolean = false;
 
 
@@ -24,6 +25,7 @@ export class ChatUserComponent {
   }
 
   selectedClick() {
+ 
     if (this.user) {
       this.stateService.setSelectedUser(this.id);
    

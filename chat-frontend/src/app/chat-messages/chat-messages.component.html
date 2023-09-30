@@ -1,18 +1,19 @@
-<div class="card">
+<div class="card" *ngIf="users && targetUserId !== undefined">
   <div class="card-header msg_head">
     <div class="d-flex bd-highlight">
       <div class="img_cont">
-        <img  *ngIf="users && targetUserId !== undefined"
-          [src]= "users[targetUserId].avatar"
+        <img
+          *ngIf="users && targetUserId !== undefined"
+          [src]="users[targetUserId].avatar"
           class="rounded-circle user_img"
         />
         <span class="online_icon"></span>
       </div>
       <div class="user_info">
-  
-        <span *ngIf="users && targetUserId !== undefined">Chat with {{ users[targetUserId].name }}</span>
+        <span *ngIf="users && targetUserId !== undefined"
+          >Chat with {{ users[targetUserId].name }}</span
+        >
 
-        
         <p>1767 Messages</p>
       </div>
       <div class="video_cam">
@@ -31,39 +32,66 @@
     </div>
   </div>
   <div class="card-body msg_card_body">
-    <app-chat-message
-    *ngFor="let message of targetMessages"
-    [message]="message"
-    [user]="users?.[message.senderId]"
-    [targetUserID]="targetUserId"
-  ></app-chat-message>
-  
+    <form [formGroup]="messagesForm" (ngSubmit)="onSubmit()">
+      <div class="card-body msg_card_body">
+        <div
+          *ngFor="
+            let messageCtrl of $any(this.messagesForm.get('messages')).controls;
+            let i = index
+          "
+        >
+          <app-chat-message
+            [message]="messageCtrl.value"
+            [user]="this.users?.[messageCtrl.value.senderId]"
+            [targetUserID]="targetUserId"
+          
+          ></app-chat-message>
+        </div>
+      </div>
 
-    <button
-      *ngIf="!this.targetMessages"
-      type="button"
-      class="btn btn-info btn-rounded float-end"
-    >
-      Send
-    </button>
+   
+    </form>
+    
   </div>
+
   <div class="card-footer">
     <div class="input-group">
       <div class="input-group-append">
         <span class="input-group-text attach_btn"
-          ><i class="fa fa-paperclip"></i
-        ></span>
+          ><label for="file-input">
+            <i class="fa fa-paperclip"></i>
+          </label></span>
       </div>
-      <textarea
+      <div class="file-input-container">
+       
+        <input
+          type="file"
+          id="file-input"
+          (change)="onFileSelected($event)"
+          style="display: none"
+        />
+    
+      </div>
+    
+      <input  [(ngModel)]="textMessage"
+        type="text"
         name=""
+
         class="form-control type_msg"
         placeholder="Type your message..."
-      ></textarea>
+      />
       <div class="input-group-append">
-        <span class="input-group-text send_btn"
+        <span
+          class="input-group-text send_btn"
+          type="submit"
+          (click)="Sending()"
           ><i class="fa fa-location-arrow"></i
         ></span>
+        
       </div>
+    
+
     </div>
+    <span>{{ selectedFileName }}</span>
   </div>
 </div>

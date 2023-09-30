@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { StateService } from '../state.service';
+import { StateService } from '../../../Services/state.service';
 import {
-  ChatData,
-  ChatMessage,
-  ChatUser,
-  User,
+  ChatData, User,
+ 
 } from '../../utilites/interfaces/interface';
+import { ApiService } from 'Services/api.service';
 
 @Component({
   selector: 'app-chat',
@@ -13,65 +12,26 @@ import {
   styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit {
-  constructor(public stateService: StateService) {}
+  constructor(private stateService: StateService, private api: ApiService) {}
 
   ngOnInit() {
-    const initialChats: ChatData = {
-      conversations: [
-        {
-          id: 11111111111,
-          messages: [
-            {
-              id: 9876543210,
-              timestamp: '2023-09-28T16:06:07.000Z',
-              senderId: 11111111111,
-              recipientId: 22222222222,
-              text: 'Hello!',
-            },
-            {
-              id: 11111111111,
-              timestamp: '2023-09-28T16:06:10.000Z',
-              senderId: 22222222222,
-
-              recipientId: 11111111111,
-              text: 'Hi, Bard!',
-            },
-          ],
-        },
-        {
-          id: 22222222222,
-
-          messages: [
-            {
-              id: 9876543210,
-              timestamp: '2023-09-28T16:06:07.000Z',
-              senderId: 11111111111,
-
-              recipientId: 22222222222,
-              text: 'Hello!',
-            },
-            {
-              id: 11111111111,
-              timestamp: '2023-09-28T16:06:10.000Z',
-              senderId: 22222222222,
-              recipientId: 11111111111,
-              text: 'Hi, User!',
-            },
-          ],
-        },
-      ],
-    };
-    const initialUsers = {
-      11111111111: {
-        name: 'Bard',
-        avatar: 'https://picsum.photos/200',
+    this.api.fetchMessagesByUserId(this.stateService.userId).subscribe(
+      (messages: ChatData) => {
+        console.log("usermsg...........",messages)
+this.stateService.setChats(messages);
       },
-      22222222222: {
-        name: 'User',
-        avatar: 'https://picsum.photos/300',
+      (error) => {
+        console.error('Error fetching messages:', error);
+      }
+    );
+    this.api.fetchAllUsersById(this.stateService.userId).subscribe(
+      (users: { [key: number]: User }) => {
+
+       this.stateService.setChatUsers(users);
       },
-    };
-    this.stateService.setChats(initialChats);
-    this.stateService.setChatUsers(initialUsers);
+      (error) => {}
+    );
+
+
   }
 }

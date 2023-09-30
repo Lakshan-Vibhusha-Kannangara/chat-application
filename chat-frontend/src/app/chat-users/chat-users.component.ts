@@ -1,41 +1,71 @@
-// chat-users.component.ts
-import { Component, Input, OnInit } from '@angular/core';
-import { StateService } from '../state.service';
-import { ChatData, User, ChatUser } from '../../utilites/interfaces/interface';
+import { Component, OnInit } from '@angular/core';
+import { StateService } from '../../../Services/state.service';
+import { ChatData, User } from '../../utilites/interfaces/interface';
+import { map } from 'rxjs/operators';
+import { ApiService } from 'Services/api.service';
 
 @Component({
   selector: 'app-chat-users',
   templateUrl: './chat-users.component.html',
-  styleUrls: ['./chat-users.component.css']
+  styleUrls: ['./chat-users.component.css'],
 })
 export class ChatUsersComponent implements OnInit {
-  chats: ChatData | undefined;
-  users: { [key: number]: User } | undefined;
+  users: { [key: number]: User } = {};
   searchText: string = '';
+  userIds: number[] = [];
 
-  constructor(private stateService: StateService) { }
+  constructor(private stateService: StateService, private api: ApiService) {}
 
   ngOnInit() {
-    this.stateService.chats$.subscribe((data) => {
-      this.chats = data;
+    // Subscribe to users$ and update userIds
+    this.stateService.users$.subscribe((userData: { [key: number]: User }) => {
+      this.userIds = Object.keys(userData).map(Number);
     });
 
-    this.stateService.users$.subscribe((data) => {
-      console.log("here's data :",data)
-      this.users = data;
-    });
+    this.stateService.users$
+      .pipe(
+        map((data: { [key: number]: User }) => {
+          this.users = data;
+        })
+      )
+      .subscribe();
   }
 
-  onClick() {
+  onKeyUp(event: any) {
+    if (this.searchText == null) {
+      this.stateService.fetchUsers(this.searchText);
+      this.api.fetchMessagesByUserId(this.stateService.userId).subscribe(
+        (messages: ChatData) => {
+          this.stateService.setChats(messages);
+        },
+        (error) => {
+          console.error('Error fetching messages:', error);
+        }
+      );
+    }
+    else{
+      this.api.fetchAllUsersById(this.stateService.userId).subscribe(
+        (users: { [key: number]: User }) => {
+          this.stateService.setChatUsers(users);
+        },
+        (error) => {}
+      );
+      this.stateService.fetchUsers(this.searchText);
+      this.stateService.setSearch(this.searchText);
+      this.stateService.users$
+      .pipe(
+        map((data: { [key: number]: User }) => {
+          this.users = data;
+        })
+      )
+      .subscribe();
+    }
 
-    this.stateService.fetchUsers(this.searchText);
 
 
-    this.stateService.chats$.subscribe(chats => {
-      console.log(chats);
-    });
+  }
 
-
-    this.stateService.setSelectedUser(undefined);
+  getUserById(userId: number): User | undefined {
+    return this.users[userId];
   }
 }

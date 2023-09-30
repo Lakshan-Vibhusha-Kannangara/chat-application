@@ -17,3 +17,11 @@
     background-clip: padding-box;
     box-shadow: 10px 10px 10px rgba(46, 54, 68, 0.03);
     }
+    .content{
+        height: 100%;
+        margin: 0;
+        background: #7F7FD5;
+       background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+        background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+        position: relative;
+    }
