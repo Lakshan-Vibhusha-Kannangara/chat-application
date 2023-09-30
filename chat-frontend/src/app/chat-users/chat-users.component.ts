@@ -11,13 +11,21 @@ import { ApiService } from 'Services/api.service';
 })
 export class ChatUsersComponent implements OnInit {
   users: { [key: number]: User } = {};
+  profilePic!: string;
+  profileName!: string;
   searchText: string = '';
   userIds: number[] = [];
 
-  constructor(private stateService: StateService, private api: ApiService) {}
+  constructor(public stateService: StateService, private api: ApiService) {}
 
   ngOnInit() {
-    // Subscribe to users$ and update userIds
+    if(this.stateService.loginUser.avatar){
+      this.profilePic=this.stateService.loginUser.avatar;
+    }
+    if(this.stateService.loginUser.name){
+      this.profileName=this.stateService.loginUser.name;
+    }
+       
     this.stateService.users$.subscribe((userData: { [key: number]: User }) => {
       this.userIds = Object.keys(userData).map(Number);
     });
@@ -33,7 +41,13 @@ export class ChatUsersComponent implements OnInit {
 
   onKeyUp(event: any) {
     if (this.searchText == null) {
-      this.stateService.fetchUsers(this.searchText);
+      this.api.fetchAllUsersById(this.stateService.userId).subscribe(
+        (users: { [key: number]: User }) => {
+          this.stateService.setChatUsers(users);
+        },
+        (error) => {}
+      );
+    
       this.api.fetchMessagesByUserId(this.stateService.userId).subscribe(
         (messages: ChatData) => {
           this.stateService.setChats(messages);
@@ -44,13 +58,8 @@ export class ChatUsersComponent implements OnInit {
       );
     }
     else{
-      this.api.fetchAllUsersById(this.stateService.userId).subscribe(
-        (users: { [key: number]: User }) => {
-          this.stateService.setChatUsers(users);
-        },
-        (error) => {}
-      );
       this.stateService.fetchUsers(this.searchText);
+   
       this.stateService.setSearch(this.searchText);
       this.stateService.users$
       .pipe(

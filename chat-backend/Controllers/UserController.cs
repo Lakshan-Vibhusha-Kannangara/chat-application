@@ -42,5 +42,19 @@ namespace chatbackend.Controllers
             var users = await _userRepo.PostUser(chatUserDTO);
             return Ok(users);
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(ChatUserDTO chatUserDTO)
+        {
+            var user = await _userRepo.GetLogin(chatUserDTO);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
     }
 }

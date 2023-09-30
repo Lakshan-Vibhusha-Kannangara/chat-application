@@ -1,17 +1,22 @@
 <!-- chat-users.component.html -->
 <div class="card-body contacts_body">
   <div class="settings-tray bd-highlight">
-    <img
-      class="profile-image"
-      src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg"
-      alt="Profile img"
-    />
-    <span class="settings-tray--right">
-      <i class="fa fa-cog"></i>
-    </span>
-    <span class="settings-tray--right">
-      <p class="profile-imaget">User</p>
-    </span>
+    <div class="row align-items-center">
+      <div class="col-3 text-center">
+        <img class="rounded-circle user_img" src="{{profilePic}}" alt="Profile img" />
+      </div>
+      <div class="col-9">
+        <div class="d-flex justify-content-between align-items-center"> <!-- Added 'justify-content-between' to push the cog icon to the right -->
+          <p class="profile-name">{{profileName}}</p>
+          <span class="settings-tray--right">
+            <i class="fa fa-cog"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    
+  
+
   </div>
 
   <div class="col">

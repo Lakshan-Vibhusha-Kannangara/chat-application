@@ -90,6 +90,19 @@ namespace chatbackend.Repos
             return result;
         }
 
+public async Task<ChatUserDTO> GetLogin(ChatUserDTO chatUserDTO)
+{
+    var user = await _context.ChatUsers
+        .FirstOrDefaultAsync(c => c.Email == chatUserDTO.emailId && c.Password == chatUserDTO.password);
+
+    if (user != null)
+    {
+        return _mapper.Map<ChatUserDTO>(user);
+    }
+
+    return null;
+}
+
         public async Task<ChatUserDTO> PostUser(ChatUserDTO chatUserDTO)
         {
             var usr = _mapper.Map<ChatUser>(chatUserDTO);
@@ -99,5 +112,6 @@ namespace chatbackend.Repos
             return chatUserDTO;
         }
 
+     
     }
 }

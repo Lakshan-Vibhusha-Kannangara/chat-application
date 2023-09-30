@@ -248,11 +248,7 @@ margin-bottom: 15px !important;
     margin-left: 14px;
     transition: 0.3s;
   }
-  .profile-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 40px;
-  }
+
   
 
   
@@ -261,4 +257,15 @@ margin-bottom: 15px !important;
   }
   .card-header{
     margin-bottom: 6px;
+  }
+  .user_img {
+    width: 5vw;
+    height: 5vw;
+    object-fit: cover;
+    object-position: center center; 
+    border-radius: 50%; 
+  }
+  .profile-name{
+    font-size: 30px;
+    color: antiquewhite;
   }

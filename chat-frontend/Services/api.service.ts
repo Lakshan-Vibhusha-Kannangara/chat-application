@@ -27,11 +27,12 @@ postMessage(message:ChatMessage): Observable<any> {
 }
 postLogin(login: LoginUser): Observable<any> {
   return this.http.post(
-    `${env.endpoint}/Login/PostLoginDetails`,
+    `${env.endpoint}/users/login`,
     login
   );
 }
 postUser(register: LoginUser): Observable<any> {
   return this.http.post(`${env.endpoint}/users`, register);
 }
+
 }

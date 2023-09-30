@@ -31,6 +31,15 @@
   <div class="msg_cotainer_send">
     {{ message?.text }}
     <span class="msg_time_send">8:55 AM, Today</span>
+    <div class="ms-3 " style="border-radius: 15px;" *ngIf="message?.attachment">
+      <div class="bg-image" *ngIf="message?.attachment">
+        <img src={{message?.attachment}} class="attachment"
+          style="border-radius: 15px;" alt="video">
+        <a href="#!">
+          <div class="mask"></div>
+        </a>
+      </div>
+    </div>
   </div>
   <div class="img_cont_msg">
     <img

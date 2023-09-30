@@ -1,24 +1,29 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ChatData, User } from '../src/utilites/interfaces/interface';
+import { BehaviorSubject } from 'rxjs';
+import { ChatData, User,LoginUser } from '../src/utilites/interfaces/interface'
 import { ApiService } from './api.service';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class StateService {
-  [x: string]: any;
   public userId: number = 1;
   public userName: string = 'Sherlock Holmes';
+
+public loginUser!: LoginUser; 
+
   private chatsSubject = new BehaviorSubject<ChatData>({
     conversations: [],
   });
 
   private chatsUsers = new BehaviorSubject<{ [key: number]: User }>({});
+
   private search = new BehaviorSubject<string | undefined>(undefined);
   chats$ = this.chatsSubject.asObservable();
   users$ = this.chatsUsers.asObservable();
   search$ = this.search.asObservable();
+  loginusr = new BehaviorSubject<LoginUser>({}); 
 
   private selectedUserSubject = new BehaviorSubject<number | undefined>(
     undefined
@@ -30,9 +35,17 @@ export class StateService {
   setChats(chats: ChatData) {
     this.chatsSubject.next(chats);
   }
+
+  // You can set the loginUser using this method
+  setLoginUser(loginUser: LoginUser) {
+    this.loginUser = loginUser;
+    this.loginusr.next(loginUser);
+  }
+
   setSearch(search: string) {
     this.search.next(search);
   }
+
   setChatUsers(users: { [key: number]: User }) {
     this.chatsUsers.next(users);
   }

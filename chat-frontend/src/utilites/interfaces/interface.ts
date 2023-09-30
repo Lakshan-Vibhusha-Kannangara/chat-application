@@ -27,8 +27,8 @@ export interface ChatData {
 export interface LoginUser {
   userId?: number;
   name?: string;
-  emailId: string;
-  password: string;
+  emailId?: string;
+  password?: string;
    avatar?: string;
   createdDate?: string;
   token?: string;
@@ -46,4 +46,8 @@ export interface User {
   designation?: string;
   createdDate?: string;
   token?: string;
+}
+export interface Login{
+  email:string,
+  password:string;
 }
