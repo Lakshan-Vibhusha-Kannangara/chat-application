@@ -240,3 +240,10 @@ margin-bottom: 15px !important;
     object-position: center center; /* Center the image within the container */
     border-radius: 50%; /* Apply a rounded shape for a circular image */
   }
+     
+  app-call{
+    z-index: 1;
+    top: 20vh;
+    left: 15vw;
+    position:relative;
+  }

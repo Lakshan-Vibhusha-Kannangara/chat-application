@@ -1,4 +1,6 @@
+
 <div class="card" *ngIf="users && targetUserId !== undefined">
+  <app-call *ngIf="showAppCall==true"></app-call>
   <div class="card-header msg_head">
     <div class="d-flex bd-highlight">
       <div class="img_cont">
@@ -14,11 +16,11 @@
           >Chat with {{ users[targetUserId].name }}</span
         >
 
-        <p>1767 Messages</p>
+        <p>{{noOfMessages}} Messages</p>
       </div>
       <div class="video_cam">
         <span><i class="fa fa-video"></i></span>
-        <span><i class="fa fa-phone"></i></span>
+        <span type="button" (click)="callClick()"><i class="fa fa-phone"></i></span>
       </div>
     </div>
     <span id="action_menu_btn"><i class="fa fa-ellipsis-v"></i></span>

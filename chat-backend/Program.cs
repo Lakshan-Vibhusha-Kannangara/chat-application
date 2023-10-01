@@ -1,19 +1,40 @@
-﻿using chatbackend.DTOs;
+﻿using System;
+using System.Text;
+using chatbackend.DTOs;
 using chatbackend.Models;
 using chatbackend.Repos;
-using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure app settings
+builder.Configuration.AddJsonFile("appsettings.json", optional: false);
+
 builder.Services.AddControllers();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            };
+        });
+
 builder.Services.AddAutoMapper(cfg =>
 {
-    cfg.CreateMap<ChatDbContext, ChatDbContext>();
     cfg.CreateMap<ChatMessage, ChatMessageDTO>();
-        cfg.CreateMap<ChatMessageDTO, ChatMessage>();
+    cfg.CreateMap<ChatMessageDTO, ChatMessage>();
     cfg.CreateMap<ChatUser, ChatUserDTO>();
-     cfg.CreateMap<ChatUserDTO, ChatUser>();
+    cfg.CreateMap<ChatUserDTO, ChatUser>();
 });
 
 builder.Services.AddDbContext<ChatDbContext>(options =>
@@ -46,6 +67,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AnyOrigin");
+app.UseAuthentication(); // Use authentication before authorization
 app.UseAuthorization();
 
 app.MapControllers();

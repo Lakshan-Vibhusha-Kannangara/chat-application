@@ -4,25 +4,24 @@
 >
   <div class="img_cont_msg">
     <img
-      src={{user?.avatar}}
+      src={{this.profilePic}}
       class="rounded-circle user_img_msg"
     />
   </div>
   <div class="msg_cotainer">
  
-    <span class="msg_time">8:40 AM, Today</span>
+    <span class="msg_time" style="white-space: nowrap;">{{ formattedTimestamp }}</span>
     <div class="ms-3 " style="border-radius: 15px;" *ngIf="message?.attachment">
       <div class="bg-image" *ngIf="message?.attachment">
-        <img src={{message?.attachment}} class="attachment"
-          style="border-radius: 15px;" alt="video">
+        <app-image-modal [modalImageUrl]="message.attachment" ></app-image-modal>
+    
         <a href="#!">
           <div class="mask"></div>
         </a>
       </div>
     </div>
- <p class="msg">   {{ message?.text }}</p>
+    <p class="msg">   {{ message?.text }}</p>
   </div>
-  
 </div>
 <div
   *ngIf="message?.recipientId != targetUserID"
@@ -30,11 +29,11 @@
 >
   <div class="msg_cotainer_send">
     {{ message?.text }}
-    <span class="msg_time_send">8:55 AM, Today</span>
+    <span class="msg_time_send" style="white-space: nowrap;">{{ formattedTimestamp }}</span>
     <div class="ms-3 " style="border-radius: 15px;" *ngIf="message?.attachment">
       <div class="bg-image" *ngIf="message?.attachment">
-        <img src={{message?.attachment}} class="attachment"
-          style="border-radius: 15px;" alt="video">
+        <app-image-modal [modalImageUrl]="message.attachment" ></app-image-modal>
+        
         <a href="#!">
           <div class="mask"></div>
         </a>
@@ -43,12 +42,9 @@
   </div>
   <div class="img_cont_msg">
     <img
-    src={{user?.avatar}}
+      src={{user?.avatar}}
       class="rounded-circle user_img_msg"
     />
   </div>
 </div>
-<div class="d-flex flex-row justify-content-start mb-4">
-
-
-</div>
+<div class="d-flex flex-row justify-content-start mb-4"></div>

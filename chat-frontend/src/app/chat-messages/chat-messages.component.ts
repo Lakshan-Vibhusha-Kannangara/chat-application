@@ -15,6 +15,11 @@ import { ApiService } from 'Services/api.service';
   styleUrls: ['./chat-messages.component.css'],
 })
 export class ChatMessagesComponent implements OnInit {
+  callClick() {
+    console.log('clicked');
+   this.stateService.setCalling(true)// Toggle the value of showAppCall
+  }
+  showAppCall: boolean = false;
   chats: ChatData = { conversations: [] };
   fileString!: string;
   textMessage = '';
@@ -24,9 +29,9 @@ export class ChatMessagesComponent implements OnInit {
   messagesForm!: FormGroup;
   filteredMessages: ChatMessage[] = [];
   selectedFileName: string = '';
+  noOfMessages!: number;
 
   constructor(private stateService: StateService, private api: ApiService) {}
-
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -34,26 +39,27 @@ export class ChatMessagesComponent implements OnInit {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-  
         this.fileString = e.target.result;
-        console.log(e.target.result)
-        
+        console.log(e.target.result);
       };
       reader.readAsDataURL(file);
     }
- 
   }
   ngOnInit() {
     this.initForm();
-
+    this.stateService.calling$.subscribe((calling: any) => {
+      console.log("calling value.........",calling)
+      this.showAppCall = calling;
+    });
     this.stateService.selectedUser$.subscribe((user) => {
       this.resetChatState();
       this.targetUserId = user!;
+
       this.stateService.users$.subscribe((users) => {
         this.users = users;
         this.stateService.chats$.subscribe((chats: ChatData) => {
           this.chats = chats;
-       
+
           this.updateTargetUserAndMessages();
         });
       });
@@ -91,7 +97,7 @@ export class ChatMessagesComponent implements OnInit {
         senderId: this.stateService.userId,
         recipientId: this.targetUserId,
         timestamp: '2023-09-30T12:00:00',
-        attachment:this.fileString
+        attachment: this.fileString,
       })
       .subscribe((post: ChatMessage) => {
         const control = new FormControl({
@@ -101,21 +107,23 @@ export class ChatMessagesComponent implements OnInit {
           senderId: post.senderId,
           recipientId: post.recipientId,
           timestamp: post.timestamp,
-          attachment:this.fileString
+          attachment: this.fileString,
         });
+        console.log('this........', post);
         targetUserChat?.messages.push({
           id: 0,
           text: post.text,
           senderId: post.senderId,
           recipientId: post.recipientId,
           timestamp: post.timestamp,
-          attachment:this.fileString
+          attachment: this.fileString,
         });
         messageArray.push(control);
+        this.noOfMessages += 1;
         this.textMessage = '';
       });
 
-      this.selectedFileName="";
+    this.selectedFileName = '';
   }
 
   onSubmit() {
@@ -130,6 +138,7 @@ export class ChatMessagesComponent implements OnInit {
       this.filteredMessages = targetUserChat.messages;
       const messageArray = this.messagesForm.get('messages') as FormArray;
       messageArray.clear();
+      this.noOfMessages = targetUserChat.messages.length;
       targetUserChat.messages.forEach((message: ChatMessage, index: number) => {
         if (message !== undefined) {
           const control = new FormControl({
@@ -139,7 +148,7 @@ export class ChatMessagesComponent implements OnInit {
             senderId: message.senderId,
             recipientId: message.recipientId,
             timestamp: message.timestamp,
-            attachment:message.attachment
+            attachment: message.attachment,
           });
           messageArray.push(control);
         }

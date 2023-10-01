@@ -19,13 +19,13 @@ export class ChatUsersComponent implements OnInit {
   constructor(public stateService: StateService, private api: ApiService) {}
 
   ngOnInit() {
-    if(this.stateService.loginUser.avatar){
-      this.profilePic=this.stateService.loginUser.avatar;
+    if (this.stateService.loginUser.avatar) {
+      this.profilePic = this.stateService.loginUser.avatar;
     }
-    if(this.stateService.loginUser.name){
-      this.profileName=this.stateService.loginUser.name;
+    if (this.stateService.loginUser.name) {
+      this.profileName = this.stateService.loginUser.name;
     }
-       
+
     this.stateService.users$.subscribe((userData: { [key: number]: User }) => {
       this.userIds = Object.keys(userData).map(Number);
     });
@@ -40,14 +40,14 @@ export class ChatUsersComponent implements OnInit {
   }
 
   onKeyUp(event: any) {
-    if (this.searchText == null) {
+    if (this.searchText == "") {
       this.api.fetchAllUsersById(this.stateService.userId).subscribe(
         (users: { [key: number]: User }) => {
           this.stateService.setChatUsers(users);
         },
         (error) => {}
       );
-    
+
       this.api.fetchMessagesByUserId(this.stateService.userId).subscribe(
         (messages: ChatData) => {
           this.stateService.setChats(messages);
@@ -56,22 +56,18 @@ export class ChatUsersComponent implements OnInit {
           console.error('Error fetching messages:', error);
         }
       );
-    }
-    else{
+    } else {
       this.stateService.fetchUsers(this.searchText);
-   
+
       this.stateService.setSearch(this.searchText);
       this.stateService.users$
-      .pipe(
-        map((data: { [key: number]: User }) => {
-          this.users = data;
-        })
-      )
-      .subscribe();
+        .pipe(
+          map((data: { [key: number]: User }) => {
+            this.users = data;
+          })
+        )
+        .subscribe();
     }
-
-
-
   }
 
   getUserById(userId: number): User | undefined {

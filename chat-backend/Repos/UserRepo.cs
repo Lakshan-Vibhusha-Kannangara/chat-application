@@ -2,8 +2,12 @@ using AutoMapper;
 using chatbackend.DTOs;
 using chatbackend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace chatbackend.Repos
@@ -12,11 +16,13 @@ namespace chatbackend.Repos
     {
         private readonly IMapper _mapper;
         private readonly ChatDbContext _context;
+              private readonly IConfiguration _configuration;
 
-        public UserRepo(IMapper mapper, ChatDbContext context)
+        public UserRepo(IMapper mapper, ChatDbContext context,IConfiguration configuration)
         {
             _mapper = mapper;
             _context = context;
+             _configuration = configuration;
         }
 
         public async Task<Dictionary<string, Dictionary<string, string>>> getAllUsers()
@@ -103,15 +109,48 @@ public async Task<ChatUserDTO> GetLogin(ChatUserDTO chatUserDTO)
     return null;
 }
 
-        public async Task<ChatUserDTO> PostUser(ChatUserDTO chatUserDTO)
-        {
-            var usr = _mapper.Map<ChatUser>(chatUserDTO);
-            _context.ChatUsers.Add(usr);
-            _context.SaveChanges();
+ public async Task<ChatUserDTO> PostUser(ChatUserDTO chatUserDTO)
+{
+    // Map the DTO to the ChatUser entity
+    var user = _mapper.Map<ChatUser>(chatUserDTO);
 
-            return chatUserDTO;
-        }
+    // Save the user to the database
+    _context.ChatUsers.Add(user);
+    _context.SaveChanges();
 
-     
+    // Generate a JWT token for the newly created user
+    var claims = new[]
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()), // User ID as subject
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique identifier
+        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), // Issued at
+        // Add other claims as needed (e.g., user roles, etc.)
+    };
+
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+    var token = new JwtSecurityToken(
+        _configuration["Jwt:Issuer"],
+        _configuration["Jwt:Audience"],
+        claims,
+        expires: DateTime.UtcNow.AddMinutes(10), // Set the token expiration time as needed
+        signingCredentials: signIn);
+
+    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+    // Update the user's Token property in the database
+    user.Token = tokenString;
+    _context.SaveChanges();
+
+    // Return the newly created user DTO along with the token
+    return new ChatUserDTO
+    {
+        userId = user.UserId,
+        name = user.Name,
+        // Include other properties as needed
+        token = tokenString
+    };
+}
     }
+
 }

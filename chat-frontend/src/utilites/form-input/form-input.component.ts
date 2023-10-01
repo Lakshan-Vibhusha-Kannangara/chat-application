@@ -10,6 +10,8 @@ export class FormInputComponent {
   @Input()
   label!: string;
   @Input()
+  default!: string;
+  @Input()
   control!: FormControl;
   @Input()
   placeholder!: string;

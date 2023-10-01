@@ -161,6 +161,7 @@ font-size: 10px;
 }
 .msg_time_send{
 position: absolute;
+min-width:100px;
 right:0;
 bottom: -15px;
 color: rgba(255,255,255,0.5);
@@ -227,4 +228,89 @@ margin-bottom: 15px !important;
   }
   .msg{
     margin-left: 0.2vw;
+  }
+
+
+
+
+
+
+
+
+
+  .card {
+    height: 500px;
+    border-radius: 15px !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .contacts_body {
+    padding: 0.75rem 0 !important;
+    overflow-y: auto;
+    white-space: nowrap;
+  }
+
+  .msg_card_body {
+    overflow-y: auto;
+  }
+
+  .search {
+    border-radius: 15px 0 0 15px !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    color: white !important;
+  }
+
+  .search:focus {
+    box-shadow: none !important;
+    outline: 0 !important;
+  }
+
+  .type_msg {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    color: white !important;
+    height: 60px !important;
+    overflow-y: auto;
+  }
+
+  .type_msg:focus {
+    box-shadow: none !important;
+    outline: 0 !important;
+  }
+
+  .attach_btn,
+  .send_btn,
+  .search_btn {
+    border-radius: 0 !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    color: white !important;
+    cursor: pointer;
+  }
+
+  .user_img_msg {
+    height: 40px;
+    width: 40px;
+    border: 1.5px solid #f5f6fa;
+  }
+
+  .img_cont_msg {
+    height: 40px;
+    width: 40px;
+  }
+
+  .msg_cotainer,
+  .msg_cotainer_send {
+    border-radius: 25px;
+    align-items: center;
+    padding: 10px;
+    min-width: 80px;
+    position: relative;
+  }
+
+  .msg_time,
+  .msg_time_send {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 10px;
   }

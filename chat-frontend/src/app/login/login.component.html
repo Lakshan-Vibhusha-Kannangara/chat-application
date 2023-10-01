@@ -28,6 +28,7 @@
         [control]="$any(this.loginForm.get('emailId'))"
         placeholder="Email Address"
         [required]="true"
+        [default]="'elsa@email.com'"
         [icon]="'fa fa-envelope'"
       ></app-form-input>
     </div>
@@ -35,6 +36,7 @@
       <app-form-input
         [type]="'password'"
         label="Password"
+        [default]="'elsa'"
         [control]="$any(this.loginForm.get('password'))"
         placeholder="Password"
         [required]="true"

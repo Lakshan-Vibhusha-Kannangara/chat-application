@@ -1,5 +1,6 @@
 using chatbackend.DTOs;
 using chatbackend.Repos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -18,18 +19,24 @@ namespace chatbackend.Controllers
         }
 
         [HttpGet]
+              [Authorize]
+
         public async Task<IActionResult> GetAllMessages()
         {
             var messages = await _messageRepo.GetChatMessages();
             return Ok(messages);
         }
         [HttpGet("{userId}")]
+              [Authorize]
+
         public IActionResult GetMessagesByUserId(int userId)
         {
             var messages = _messageRepo.GetChatData(userId);
             return Ok(messages);
         }
         [HttpPost]
+              [Authorize]
+
         public IActionResult addMessage(ChatMessageDTO chatMessage)
         {
             var messages = _messageRepo.AddChatMessage(chatMessage);

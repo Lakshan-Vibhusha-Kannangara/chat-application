@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatUsersComponent } from './chat-users/chat-users.component';
 import { ChatMessagesComponent } from './chat-messages/chat-messages.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ChatUserComponent } from './chat-user/chat-user.component';
 import { ChatMessageComponent } from './chat-message/chat-message.component';
 import { ChatComponent } from './chat/chat.component';
@@ -16,6 +16,10 @@ import { FormInputComponent } from 'src/utilites/form-input/form-input.component
 import { RouterModule, Routes } from '@angular/router';
 
 import { ImageUploadComponent } from './image-upload/image-upload.component';
+import { AuthInterceptor } from './auth-interceptor.service';
+import { CallComponent } from './call/call.component';
+
+import { ImageModalComponent } from './image-modal/image-modal.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
  
@@ -35,6 +39,9 @@ const routes: Routes = [
         ChatComponent,
 
         ImageUploadComponent,
+         CallComponent,
+      
+         ImageModalComponent,
 
   ],
   imports: [
@@ -42,7 +49,11 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     AppRoutingModule,FormsModule,HttpClientModule,ReactiveFormsModule
   ],
-  providers: [],exports:[RouterModule],
+  providers: [ {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true,
+  },],exports:[RouterModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

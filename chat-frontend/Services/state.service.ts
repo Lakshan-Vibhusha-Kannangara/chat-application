@@ -20,7 +20,9 @@ public loginUser!: LoginUser;
   private chatsUsers = new BehaviorSubject<{ [key: number]: User }>({});
 
   private search = new BehaviorSubject<string | undefined>(undefined);
+  private calling = new BehaviorSubject<boolean | undefined>(undefined);
   chats$ = this.chatsSubject.asObservable();
+  calling$ = this.calling.asObservable();
   users$ = this.chatsUsers.asObservable();
   search$ = this.search.asObservable();
   loginusr = new BehaviorSubject<LoginUser>({}); 
@@ -44,6 +46,9 @@ public loginUser!: LoginUser;
 
   setSearch(search: string) {
     this.search.next(search);
+  }
+  setCalling(calling: boolean) {
+    this.calling.next(calling);
   }
 
   setChatUsers(users: { [key: number]: User }) {

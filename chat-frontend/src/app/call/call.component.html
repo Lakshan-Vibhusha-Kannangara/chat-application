@@ -1,0 +1,47 @@
+<div class="call">
+    <header>
+      <h1>
+     Calling
+      </h1>
+ 
+    </header>
+    <main>
+      <div class="user">
+        <div class="user-photo">
+          <div class="user-photo__wrap">
+            <img src={{callingUser.avatar}} class="rounded-circle user_img" />
+          </div>
+        </div>
+        <div class="user-name">
+        {{callingUser.name}}
+        </div>
+      </div>
+      <div class="content-center">
+   
+        <div>
+           <div class="col">
+                 <div class="pulse"> <i class="fa fa-phone fa-2x"></i> </div>
+       
+           </div>
+           
+        </div>
+        
+    </div>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <div class="buttons content-center" (click)="onClick()">
+        <div class="col" >
+          <button class="buttons button -decline" (click)="onClick()">        Hang Up</button>
+
+     
+        </div>
+   
+      </div>
+
+    </main>
+  </div>
+  
