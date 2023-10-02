@@ -15,17 +15,19 @@ export class ChatUsersComponent implements OnInit {
   profileName!: string;
   searchText: string = '';
   userIds: number[] = [];
-
+  chats!:ChatData;
   constructor(public stateService: StateService, private api: ApiService) {}
 
   ngOnInit() {
-    if (this.stateService.loginUser.avatar) {
-      this.profilePic = this.stateService.loginUser.avatar;
-    }
-    if (this.stateService.loginUser.name) {
-      this.profileName = this.stateService.loginUser.name;
-    }
 
+  
+    if(this.stateService.loginUser.avatar){
+      this.profilePic=this.stateService.loginUser.avatar;
+    }
+    if(this.stateService.loginUser.name){
+      this.profileName=this.stateService.loginUser.name;
+    }
+       
     this.stateService.users$.subscribe((userData: { [key: number]: User }) => {
       this.userIds = Object.keys(userData).map(Number);
     });
@@ -40,14 +42,21 @@ export class ChatUsersComponent implements OnInit {
   }
 
   onKeyUp(event: any) {
+    this.stateService.setSelectedUser(undefined);
+  
     if (this.searchText == "") {
+   
+
       this.api.fetchAllUsersById(this.stateService.userId).subscribe(
         (users: { [key: number]: User }) => {
           this.stateService.setChatUsers(users);
+          this.stateService.loginUser
+          if(this.stateService.loginUser.userId) this.stateService.setSelectedUser(users[0].id);
+          console.log(this.stateService.setSelectedUser(users[0].id))
         },
         (error) => {}
       );
-
+    
       this.api.fetchMessagesByUserId(this.stateService.userId).subscribe(
         (messages: ChatData) => {
           this.stateService.setChats(messages);
@@ -56,18 +65,32 @@ export class ChatUsersComponent implements OnInit {
           console.error('Error fetching messages:', error);
         }
       );
-    } else {
-      this.stateService.fetchUsers(this.searchText);
+    }
+    else{
 
+      this.stateService.fetchUsers(this.searchText);
+   
       this.stateService.setSearch(this.searchText);
       this.stateService.users$
-        .pipe(
-          map((data: { [key: number]: User }) => {
-            this.users = data;
-          })
-        )
-        .subscribe();
+      .pipe(
+        map((data: { [key: number]: User }) => {
+          this.users = data;
+        })
+      )
+      .subscribe();
     }
+    console.log("chatting")
+    this.stateService.chats$.subscribe((chats: ChatData) => {
+      this.chats = chats;
+  
+
+       
+      }
+     
+   
+    );
+
+
   }
 
   getUserById(userId: number): User | undefined {

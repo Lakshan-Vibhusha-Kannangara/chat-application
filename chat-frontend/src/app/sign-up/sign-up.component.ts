@@ -47,7 +47,7 @@ throw new Error('Method not implemented.');
 
   onClick() {
     const formData = this.signUpForm.value;
-
+    alert("Signing Up....")
     this.api
       .postUser({
         name: formData.fullName,
@@ -56,10 +56,13 @@ throw new Error('Method not implemented.');
         avatar: this.imageData,
       })
       .subscribe((response: LoginResponse) => {
+        alert("Sign Up successful....")
         this.setAuthTokenInSessionCookie(response.token);
         alert('sign up successful');
         console.log(this.cookieService.get('authToken'));
         this.router.navigate(['/login']);
+      },(error)=>{
+        alert("Give Correct Details")
       });
   }
 }

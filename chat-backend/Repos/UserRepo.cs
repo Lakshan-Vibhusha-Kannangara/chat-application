@@ -72,11 +72,11 @@ namespace chatbackend.Repos
 
             return result;
         }
-        public async Task<Dictionary<string, Dictionary<string, string>>> GetAllUsersByUserMorph(string morph)
+        public async Task<Dictionary<string, Dictionary<string, string>>> GetAllUsersByUserMorph(SearchDataDTO searchDataDTO)
         {
             // Retrieve users whose names match the partial string
             var chatUsers = await _context.ChatUsers
-                .Where(u => u.Name.Contains(morph))
+                .Where(u => u.Name.Contains(searchDataDTO.query) && u.UserId!=searchDataDTO.userId)
                 .ToListAsync();
 
             // Transform the retrieved data into the desired format

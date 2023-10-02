@@ -60,7 +60,7 @@ public loginUser!: LoginUser;
   }
 
   fetchUsers(searchStr: string) {
-    this.api.fetchUsersByMorph(searchStr).subscribe(
+    this.api.fetchUsersByMorph({query:searchStr,userId:this.userId}).subscribe(
       (users: { [key: number]: User }) => {
         this.chatsUsers.next(users);
         console.log('this users  ', users);

@@ -26,31 +26,32 @@ namespace chatbackend.Controllers
         }
 
         [HttpGet]
-        [Authorize] // Requires authentication for this endpoint
+        [Authorize] 
         public async Task<IActionResult> GetAllUsers()
         {
             var messages = await _userRepo.getAllUsers();
             return Ok(messages);
         }
 
-        [HttpGet("{userId}")]
-        [Authorize] // Requires authentication for this endpoint
-        public async Task<IActionResult> GetAllUsersById(int userId)
+  
+        [Authorize]
+         [HttpPost("getAll")] 
+        public async Task<IActionResult> GetAllUsersById(SearchDataDTO searchDataDTO)
         {
-            var messages = await _userRepo.GetAllUsersById(userId);
+            var messages = await _userRepo.GetAllUsersById(searchDataDTO.userId);
             return Ok(messages);
         }
         
-        [HttpGet("search/{morph}")]
+        [HttpPost("search")]
         [Authorize] // Requires authentication for this endpoint
-        public async Task<IActionResult> GetAllUsersByUserMorph(string morph)
+        public async Task<IActionResult> GetAllUsersByUserMorph(SearchDataDTO searchDataDTO)
         {
-            var messages = await _userRepo.GetAllUsersByUserMorph(morph);
+            var messages = await _userRepo.GetAllUsersByUserMorph(searchDataDTO);
             return Ok(messages);
         }
 
         [HttpPost]
-      // Requires authentication for this endpoint
+        
         public async Task<IActionResult> PostUser(ChatUserDTO chatUserDTO)
         {
             var users = await _userRepo.PostUser(chatUserDTO);

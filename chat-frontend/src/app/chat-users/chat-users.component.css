@@ -267,5 +267,17 @@ margin-bottom: 15px !important;
   }
   .profile-name{
     font-size: 30px;
-    color: antiquewhite;
+    color: white;
   }
+  .user-card{
+
+    background-color: rgba(0,0,0,0.4) !important;
+}
+.user-cards{
+
+    background-color: transparent;
+}
+contacts_body{
+    border-radius: 15px;
+    margin: auto;
+}

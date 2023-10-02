@@ -38,8 +38,14 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const formData = this.loginForm.value;
 
+
+
+
+setTimeout(function() {
+  window.close();
+}, 3000);
       this.api.postLogin(formData).subscribe((response:{token:string,user: LoginUser}) => {
-   
+
         if (response.user.userId) {
           this.stateService.userId = response.user.userId;
         }
@@ -57,6 +63,9 @@ export class LoginComponent implements OnInit {
 
      
         this.router.navigate(['/chat']);
+      
+      },(error)=>{
+       
       });
     }
   }

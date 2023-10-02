@@ -20,6 +20,8 @@ import { AuthInterceptor } from './auth-interceptor.service';
 import { CallComponent } from './call/call.component';
 
 import { ImageModalComponent } from './image-modal/image-modal.component';
+import { FooterComponent } from './footer/footer.component';
+import { ChatEmptyComponent } from './chat-empty/chat-empty.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
  
@@ -42,6 +44,8 @@ const routes: Routes = [
          CallComponent,
       
          ImageModalComponent,
+                FooterComponent,
+                ChatEmptyComponent,
 
   ],
   imports: [

@@ -21,26 +21,15 @@ export class ChatUserComponent {
   constructor(private stateService: StateService) {}
 
   ngOnInit() {
-    this.stateService.chats$.subscribe((chats: ChatData) => {
-      this.chats = chats;
   
-     
-       this.lastMsg= this.chats.conversations[this.id-1].messages[this.chats.conversations[this.id].messages.length-1].text;
-       console.log("messages................",this.lastMsg)
-      }
-     
-   
-    );
-    if (this.user) {
-      this.stateService.setSelectedUser(this.id);
-    }
+
   }
 
   selectedClick() {
  
     if (this.user) {
       this.stateService.setSelectedUser(this.id);
-   
+      
     }
   }
 }

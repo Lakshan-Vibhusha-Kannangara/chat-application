@@ -1,14 +1,23 @@
 <!-- image-modal.component.html -->
 
-<div class="image" (click)="openModal()" >
-    <img [src]="modalImageUrl" alt="Food"  class="attachment"
-    style="border-radius: 15px;">
+<div class="image" (click)="openModal()" style="align-items: center;position: relative;">
+    <img [src]="modalImageUrl" alt="Food"  class="attachment" *ngIf="isImage==true"
+    style="border-radius: 15px;position: relative;">
+
+    <video  [src]="modalImageUrl" controls class="attachment" style="border-radius: 15px; position: relative;" *ngIf="isVideo"></video>
+  
   </div>
   
-  <!-- The Modal -->
-  <div id="imgModal" class="modal" [ngStyle]="{'display': modalOpen ? 'block' : 'none'}">
-    <span class="close" (click)="closeModal()">&times;</span>
-    <img class="modal-content" id="img01" [src]="modalImageUrl" [alt]="modalImageAlt" >
-
+<!-- The Modal -->
+<div id="imgModal" class="modal" [ngStyle]="{'display': modalOpen ? 'block' : 'none'}" (click)="closeModal()">
+    <div class="modal-dialog modal-dialog-centered" style="width: 100vw;height: auto;margin: auto;">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <span class="close" (click)="closeModal()">&times;</span>
+        <img class="modal-content" id="img01" [src]="modalImageUrl" [alt]="modalImageAlt" *ngIf="isImage == true">
+        <video  [src]="modalImageUrl" controls class="modal-content" style="border-radius: 15px; position: relative;" *ngIf="isVideo == true"></video>
+      </div>
+    </div>
   </div>
+  
+  
   

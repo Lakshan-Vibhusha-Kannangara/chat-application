@@ -1,0 +1,105 @@
+.phone__magnifier {
+    transform: translateY(0);
+    animation: moveUpDown 5s linear infinite alternate;
+    opacity: 1;
+  }
+  
+  .phone__books {
+    transform: translateY(0);
+    animation: moveUpDown 6s linear infinite alternate;
+    opacity: 1;
+  }
+  
+  .phone__message {
+    transform: translateY(0);
+    animation: moveUpDown 4s linear infinite alternate;
+    opacity: 1;
+  }
+  
+  @keyframes moveUpDown {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  body{
+    background-color: tomato;
+  }
+  .wrapper{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+  }
+  
+  h1{
+    float: left;
+    color: white;
+    letter-spacing: 2px;
+  }
+  
+  .one{
+      opacity: 0;
+      animation: fadeIn 1s ease-in 0s forwards;
+  }
+  
+  .two{
+      opacity: 0;
+      animation: fadeIn 1s ease-in 1s forwards;
+  }
+  .three{
+      opacity: 0;
+      animation: fadeIn 1s ease-in 2s forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+      transform: rotate(20deg);
+    }
+  }
+  body{
+    background-color: tomato;
+  }
+  .wrapper{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+  }
+  
+  h1{
+    float: left;
+    color: white;
+    letter-spacing: 2px;
+  }
+  
+  .one{
+      opacity: 0;
+      animation: fadeIn 1s ease-in 0s forwards;
+  }
+  
+  .two{
+      opacity: 0;
+      animation: fadeIn 1s ease-in 1s forwards;
+  }
+  .three{
+      opacity: 0;
+      animation: fadeIn 1s ease-in 2s forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+      transform: rotate(20deg);
+    }
+  }

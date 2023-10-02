@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {env} from '..//env'
 import { Observable } from 'rxjs';
-import { ChatMessage, LoginUser } from 'src/utilites/interfaces/interface';
+import { ChatMessage, LoginUser, Search } from 'src/utilites/interfaces/interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,13 +14,13 @@ export class ApiService {
     return this.http.get<any>(env.endpoint + '/messages');  
 }
 fetchAllUsersById(id:number): Observable<any> {  
-  return this.http.get<any>(`${env.endpoint}/users/${id}`);  
+  return this.http.post<any>(`${env.endpoint}/users/getAll`,{userId:id});  
 }
 fetchMessagesByUserId(id: number): Observable<any> {
   return this.http.get<any>(`${env.endpoint}/messages/${id}`);
 }
-fetchUsersByMorph(morph:string): Observable<any> {
-  return this.http.get<any>(`${env.endpoint}/users/search/${morph}`);
+fetchUsersByMorph(morph:Search): Observable<any> {
+  return this.http.post<any>(`${env.endpoint}/users/search`,morph);
 }
 postMessage(message:ChatMessage): Observable<any> {
   return this.http.post<any>(`${env.endpoint}/messages`,message);

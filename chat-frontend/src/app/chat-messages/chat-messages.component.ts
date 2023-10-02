@@ -19,6 +19,7 @@ export class ChatMessagesComponent implements OnInit {
     console.log('clicked');
    this.stateService.setCalling(true)// Toggle the value of showAppCall
   }
+  send:boolean=false;
   showAppCall: boolean = false;
   chats: ChatData = { conversations: [] };
   fileString!: string;
@@ -30,7 +31,7 @@ export class ChatMessagesComponent implements OnInit {
   filteredMessages: ChatMessage[] = [];
   selectedFileName: string = '';
   noOfMessages!: number;
-
+  selectedUser!:number;
   constructor(private stateService: StateService, private api: ApiService) {}
 
   onFileSelected(event: any) {
@@ -46,6 +47,9 @@ export class ChatMessagesComponent implements OnInit {
     }
   }
   ngOnInit() {
+    this.stateService.selectedUser$.subscribe((val:any)=>{
+     this.selectedUser=val;
+    })
     this.initForm();
     this.stateService.calling$.subscribe((calling: any) => {
       console.log("calling value.........",calling)
@@ -87,6 +91,7 @@ export class ChatMessagesComponent implements OnInit {
   }
 
   Sending() {
+    this.send=true;
     const targetUserChat = this.chats.conversations.find(
       (chatUser) => chatUser.id === this.targetUserId
     );
@@ -122,7 +127,7 @@ export class ChatMessagesComponent implements OnInit {
         this.noOfMessages += 1;
         this.textMessage = '';
       });
-
+      this.send=false;
     this.selectedFileName = '';
   }
 

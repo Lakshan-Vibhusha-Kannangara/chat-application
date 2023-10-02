@@ -76,14 +76,22 @@ namespace chatbackend.Repos
 
             return initialChats;
         }
-        public ChatMessageDTO AddChatMessage(ChatMessageDTO chatMessage)
-        {
-            var msg = _mapper.Map<ChatMessage>(chatMessage);
-            _context.ChatMessages.Add(msg);
-            _context.SaveChanges();
-            var savedMessage = _mapper.Map<ChatMessageDTO>(msg);
-            return savedMessage;
-        }
+      public ChatMessageDTO AddChatMessage(ChatMessageDTO chatMessage)
+{
+    var msg = _mapper.Map<ChatMessage>(chatMessage);
+    
+  
+    var sriLankaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Colombo");
+    
+
+    msg.Timestamp = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, sriLankaTimeZone);
+    
+    _context.ChatMessages.Add(msg);
+    _context.SaveChanges();
+    
+    var savedMessage = _mapper.Map<ChatMessageDTO>(msg);
+    return savedMessage;
+}
     }
 
 

@@ -11,8 +11,8 @@ using chatbackend.Models;
 namespace chat_backend.Migrations
 {
     [DbContext(typeof(ChatDbContext))]
-    [Migration("20230930113611_change-schema")]
-    partial class changeschema
+    [Migration("20231001185452_online")]
+    partial class online
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,13 +66,24 @@ namespace chat_backend.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Avatar")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId");
 

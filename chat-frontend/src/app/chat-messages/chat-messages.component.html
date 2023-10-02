@@ -1,7 +1,7 @@
+<div class="card">
+  <app-call *ngIf="showAppCall == true"></app-call>
 
-<div class="card" *ngIf="users && targetUserId !== undefined">
-  <app-call *ngIf="showAppCall==true"></app-call>
-  <div class="card-header msg_head">
+  <div class="card-header msg_head" *ngIf="!users || selectedUser">
     <div class="d-flex bd-highlight">
       <div class="img_cont">
         <img
@@ -11,16 +11,19 @@
         />
         <span class="online_icon"></span>
       </div>
+      
       <div class="user_info">
         <span *ngIf="users && targetUserId !== undefined"
           >Chat with {{ users[targetUserId].name }}</span
         >
 
-        <p>{{noOfMessages}} Messages</p>
+        <p>{{ noOfMessages }} Messages</p>
       </div>
       <div class="video_cam">
         <span><i class="fa fa-video"></i></span>
-        <span type="button" (click)="callClick()"><i class="fa fa-phone"></i></span>
+        <span type="button" (click)="callClick()"
+          ><i class="fa fa-phone"></i
+        ></span>
       </div>
     </div>
     <span id="action_menu_btn"><i class="fa fa-ellipsis-v"></i></span>
@@ -34,6 +37,7 @@
     </div>
   </div>
   <div class="card-body msg_card_body">
+    <app-chat-empty  *ngIf=" !selectedUser"></app-chat-empty>
     <form [formGroup]="messagesForm" (ngSubmit)="onSubmit()">
       <div class="card-body msg_card_body">
         <div
@@ -46,39 +50,36 @@
             [message]="messageCtrl.value"
             [user]="this.users?.[messageCtrl.value.senderId]"
             [targetUserID]="targetUserId"
-          
           ></app-chat-message>
         </div>
+        <div *ngIf="send" class="jumping-dots-loader">
+          <span></span> <span></span> <span></span>
+        </div>
       </div>
-
-   
     </form>
-    
   </div>
 
-  <div class="card-footer">
+  <div class="card-footer" *ngIf="!users  ||  selectedUser">
     <div class="input-group">
       <div class="input-group-append">
         <span class="input-group-text attach_btn"
           ><label for="file-input">
-            <i class="fa fa-paperclip"></i>
-          </label></span>
+            <i class="fa fa-paperclip"></i> </label
+        ></span>
       </div>
       <div class="file-input-container">
-       
         <input
           type="file"
           id="file-input"
           (change)="onFileSelected($event)"
           style="display: none"
         />
-    
       </div>
-    
-      <input  [(ngModel)]="textMessage"
+
+      <input
+        [(ngModel)]="textMessage"
         type="text"
         name=""
-
         class="form-control type_msg"
         placeholder="Type your message..."
       />
@@ -89,10 +90,7 @@
           (click)="Sending()"
           ><i class="fa fa-location-arrow"></i
         ></span>
-        
       </div>
-    
-
     </div>
     <span>{{ selectedFileName }}</span>
   </div>
