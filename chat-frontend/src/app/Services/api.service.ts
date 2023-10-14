@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {env} from '..//env'
+import {env} from '../env'
 import { Observable } from 'rxjs';
-import { ChatMessage, LoginUser, Search } from 'src/utilites/interfaces/interface';
+import { ChatMessage, LoginUser, Search, SendUser, User } from 'src/app/utilites/interfaces/interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -31,7 +31,7 @@ postLogin(login: LoginUser): Observable<any> {
     login
   );
 }
-postUser(register: LoginUser): Observable<any> {
+postUser(register: SendUser): Observable<any> {
   return this.http.post(`${env.endpoint}/users`, register);
 }
 

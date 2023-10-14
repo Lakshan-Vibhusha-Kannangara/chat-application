@@ -5926,11 +5926,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/vibhushakannangara/Documents/VSCODE/chat-application/chat-backend/chat-backend.csproj",
+      "projectUniqueName": "/Users/vibhushakannangara/Documents/VSCODE/chat-application 2/chat-backend/chat-backend.csproj",
       "projectName": "chat-backend",
-      "projectPath": "/Users/vibhushakannangara/Documents/VSCODE/chat-application/chat-backend/chat-backend.csproj",
+      "projectPath": "/Users/vibhushakannangara/Documents/VSCODE/chat-application 2/chat-backend/chat-backend.csproj",
       "packagesPath": "/Users/vibhushakannangara/.nuget/packages/",
-      "outputPath": "/Users/vibhushakannangara/Documents/VSCODE/chat-application/chat-backend/obj/",
+      "outputPath": "/Users/vibhushakannangara/Documents/VSCODE/chat-application 2/chat-backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/vibhushakannangara/.nuget/NuGet/NuGet.Config"

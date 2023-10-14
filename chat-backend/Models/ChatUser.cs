@@ -10,7 +10,8 @@ namespace chatbackend.Models
         [Required]
         [MaxLength(255)]
         public string? Name { get; set; }
-         public string? Email { get; set; }
+          [Required]
+         public string Email { get; set; }
 
         public string? Avatar { get; set; }
         public DateTime? CreatedDate { get; set; }

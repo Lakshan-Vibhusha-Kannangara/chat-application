@@ -1,12 +1,13 @@
 using chatbackend.DTOs;
 using chatbackend.Repos;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace chatbackend.Controllers
-{
+{ 
     [Route("api/messages")]
     [ApiController]
     public class MessageController : ControllerBase

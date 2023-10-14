@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ChatMessage, User } from '../../utilites/interfaces/interface';
-import { StateService } from '../../../Services/state.service';
+import { ChatMessage, User } from '../utilites/interfaces/interface';
+import { StateService } from '../Services/state.service';
 
 @Component({
   selector: 'app-chat-message',
@@ -10,7 +10,7 @@ import { StateService } from '../../../Services/state.service';
 export class ChatMessageComponent implements OnInit {
   @Input() message!: ChatMessage ;
   @Input() targetUserID: number | undefined;
-  @Input() user: User | undefined;
+  @Input() user!: User;
   profilePic!: string;
   formattedTimestamp: string | undefined; // Add a property for the formatted timestamp
   modalImageUrl: string = '';

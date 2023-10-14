@@ -42,13 +42,27 @@
         [required]="true"
         [icon]="'fa fa-key'"
       ></app-form-input>
-    </div>
-    <div class="spans" type="button" (click)="onClick()">
+    </div >
+    <div class="spans" type="button" (click)="onClick()" *ngIf="!signingIn">
       <span></span>
       <span></span>
       <span></span>
       <span></span>
       Sign In
     </div>
+
   </form>
+  <span></span>
+  <div class="container" *ngIf="signingIn && !completed">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-auto">
+        <div class="loading">
+          <p>Signing In</p>
+          <span><i></i><i></i></span>
+        </div>
+        <p *ngIf="!signingIn && completed">Signing-In successful</p>
+      </div>
+    </div>
+  </div>
+  
 </div>

@@ -1,6 +1,7 @@
 using chatbackend.DTOs;
 using chatbackend.Repos;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace chatbackend.Controllers
-{
+{   [EnableCors("AnyOrigin")]
     [Route("api/users")]
     [ApiController]
     public class UserController : ControllerBase

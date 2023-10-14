@@ -1,0 +1,21 @@
+# Use the official ASP.NET Core runtime image as the base image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+
+# Use the official ASP.NET Core SDK image to build the app
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["chat-backend.csproj", "./"]
+RUN dotnet restore "./chat-backend.csproj"
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "chat-backend.csproj" -c Release -o /app/build
+
+# Specify the target framework as netcoreapp6.0 in the publish step
+FROM build AS publish
+RUN dotnet publish "chat-backend.csproj" -c Release -o /app/publish -f net6.0
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "chat-backend.dll"]

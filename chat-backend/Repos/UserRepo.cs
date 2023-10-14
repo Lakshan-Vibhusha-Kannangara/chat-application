@@ -99,7 +99,7 @@ namespace chatbackend.Repos
 public async Task<ChatUserDTO> GetLogin(ChatUserDTO chatUserDTO)
 {
     var user = await _context.ChatUsers
-        .FirstOrDefaultAsync(c => c.Email == chatUserDTO.emailId && c.Password == chatUserDTO.password);
+        .FirstOrDefaultAsync(c => c.Email == chatUserDTO.email && c.Password == chatUserDTO.password);
 
     if (user != null)
     {
@@ -111,7 +111,7 @@ public async Task<ChatUserDTO> GetLogin(ChatUserDTO chatUserDTO)
 
  public async Task<ChatUserDTO> PostUser(ChatUserDTO chatUserDTO)
 {
-    // Map the DTO to the ChatUser entity
+    Console.WriteLine(chatUserDTO);
     var user = _mapper.Map<ChatUser>(chatUserDTO);
 
     // Save the user to the database
@@ -147,7 +147,7 @@ public async Task<ChatUserDTO> GetLogin(ChatUserDTO chatUserDTO)
     {
         userId = user.UserId,
         name = user.Name,
-        // Include other properties as needed
+    
         token = tokenString
     };
 }

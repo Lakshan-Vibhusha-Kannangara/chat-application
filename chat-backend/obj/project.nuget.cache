@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NJDfMDrxbc2LqLypjYzAoAcoSH1ubyJrkeU2tvsz9akp+dTFsb9+4NtOFe/W16RWdKRWzmN+UfXxUX2gOAAa0g==",
+  "dgSpecHash": "pSPaV9at2SjnsO5arj8OzZnn7GqLrAjZ1GXtNzVGHLd3S32FfAcuFY/wsoyQ26Hy/b/mKZnLpyG2ht9v4kXMHQ==",
   "success": true,
-  "projectFilePath": "/Users/vibhushakannangara/Documents/VSCODE/chat-application/chat-backend/chat-backend.csproj",
+  "projectFilePath": "/Users/vibhushakannangara/Documents/VSCODE/chat-application 2/chat-backend/chat-backend.csproj",
   "expectedPackageFiles": [
     "/Users/vibhushakannangara/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/Users/vibhushakannangara/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

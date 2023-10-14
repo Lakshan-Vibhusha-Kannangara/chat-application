@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SignalRService } from './Services/signal-r.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'chat-frontend';
-  
+  constructor(private signalRService:SignalRService){
+    this.signalRService.startConnection();
+  }
 }

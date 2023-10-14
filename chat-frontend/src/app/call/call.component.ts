@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { StateService } from 'Services/state.service';
-import { ChatUser, User } from 'src/utilites/interfaces/interface';
+import { StateService } from 'src/app/Services/state.service';
+import { ChatUser, User } from 'src/app/utilites/interfaces/interface';
 import { Subscription, take } from 'rxjs';
 
 @Component({

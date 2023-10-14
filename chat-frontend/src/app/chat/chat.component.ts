@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { StateService } from '../../../Services/state.service';
-import { ChatData, User } from '../../utilites/interfaces/interface';
-import { ApiService } from 'Services/api.service';
+import { StateService } from '../Services/state.service';
+import { ChatData, User } from '../utilites/interfaces/interface';
+import { ApiService } from 'src/app/Services/api.service';
+import { SignalRService } from '../Services/signal-r.service';
 
 @Component({
   selector: 'app-chat',
@@ -10,9 +11,10 @@ import { ApiService } from 'Services/api.service';
 })
 export class ChatComponent implements OnInit {
   showAppCall: boolean = false;
-  constructor(private stateService: StateService, private api: ApiService) {}
+  constructor(private stateService: StateService, private api: ApiService,private signalRServiee:SignalRService) {}
 
   ngOnInit() {
+
     console.log(this.stateService.userId);
     this.api.fetchMessagesByUserId(this.stateService.userId).subscribe(
       (messages: ChatData) => {

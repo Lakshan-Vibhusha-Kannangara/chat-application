@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { StateService } from '../../../Services/state.service';
-import { ChatData, User } from '../../utilites/interfaces/interface';
+import { StateService } from '../Services/state.service';
+import { ChatData, User } from '../utilites/interfaces/interface';
 import { map } from 'rxjs/operators';
-import { ApiService } from 'Services/api.service';
+import { ApiService } from 'src/app/Services/api.service';
+import { SignalRService } from '../Services/signal-r.service';
 
 @Component({
   selector: 'app-chat-users',
@@ -15,21 +16,32 @@ export class ChatUsersComponent implements OnInit {
   profileName!: string;
   searchText: string = '';
   userIds: number[] = [];
-  chats!:ChatData;
-  constructor(public stateService: StateService, private api: ApiService) {}
+  chats!: ChatData;
+  selectedUser!: number;
+  constructor(
+    public stateService: StateService,
+    private api: ApiService,
+    private signalRService: SignalRService
+  ) {}
 
   ngOnInit() {
+   
+      
 
-  
-    if(this.stateService.loginUser.avatar){
-      this.profilePic=this.stateService.loginUser.avatar;
+    if (this.stateService.loginUser.avatar) {
+      this.profilePic = this.stateService.loginUser.avatar;
     }
-    if(this.stateService.loginUser.name){
-      this.profileName=this.stateService.loginUser.name;
+    if (this.stateService.loginUser.name) {
+      this.profileName = this.stateService.loginUser.name;
     }
-       
+
     this.stateService.users$.subscribe((userData: { [key: number]: User }) => {
       this.userIds = Object.keys(userData).map(Number);
+    console.log(this.userIds)
+      this.userIds.map((userId) => {
+        this.signalRService.joinUser(this.stateService.userId,userId);
+        console.log("pairs.....",this.stateService.userId,userId)
+      });
     });
 
     this.stateService.users$
@@ -40,23 +52,22 @@ export class ChatUsersComponent implements OnInit {
       )
       .subscribe();
   }
-
+  
   onKeyUp(event: any) {
     this.stateService.setSelectedUser(undefined);
-  
-    if (this.searchText == "") {
-   
 
+    if (this.searchText == '') {
       this.api.fetchAllUsersById(this.stateService.userId).subscribe(
         (users: { [key: number]: User }) => {
           this.stateService.setChatUsers(users);
-          this.stateService.loginUser
-          if(this.stateService.loginUser.userId) this.stateService.setSelectedUser(users[0].id);
-          console.log(this.stateService.setSelectedUser(users[0].id))
+          this.stateService.loginUser;
+          if (this.stateService.loginUser.userId)
+            this.stateService.setSelectedUser(users[0].id);
+          console.log(this.stateService.setSelectedUser(users[0].id));
         },
         (error) => {}
       );
-    
+
       this.api.fetchMessagesByUserId(this.stateService.userId).subscribe(
         (messages: ChatData) => {
           this.stateService.setChats(messages);
@@ -65,33 +76,25 @@ export class ChatUsersComponent implements OnInit {
           console.error('Error fetching messages:', error);
         }
       );
-    }
-    else{
-
+    } else {
       this.stateService.fetchUsers(this.searchText);
-   
+
       this.stateService.setSearch(this.searchText);
       this.stateService.users$
-      .pipe(
-        map((data: { [key: number]: User }) => {
-          this.users = data;
-        })
-      )
-      .subscribe();
+        .pipe(
+          map((data: { [key: number]: User }) => {
+            this.users = data;
+          })
+        )
+        .subscribe();
     }
-    console.log("chatting")
+    console.log('chatting');
     this.stateService.chats$.subscribe((chats: ChatData) => {
       this.chats = chats;
-  
-
-       
-      }
-     
-   
-    );
-
-
+    });
   }
+
+  
 
   getUserById(userId: number): User | undefined {
     return this.users[userId];

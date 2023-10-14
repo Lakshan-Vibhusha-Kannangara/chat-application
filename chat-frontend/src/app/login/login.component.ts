@@ -1,11 +1,11 @@
-import { LoginResponse, LoginUser } from '../../utilites/interfaces/interface';
+import { LoginResponse, LoginUser } from '../utilites/interfaces/interface';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from 'Services/api.service';
+import { ApiService } from 'src/app/Services/api.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 
-import { StateService } from 'Services/state.service';
+import { StateService } from 'src/app/Services/state.service';
 
 @Component({
   selector: 'app-login',
@@ -14,13 +14,15 @@ import { StateService } from 'Services/state.service';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-
+  signingIn:boolean=false;
+  completed:boolean=false;
   constructor(
     private api: ApiService,
     private cookieService: CookieService,
     private router: Router,
     private formBuilder: FormBuilder,
     private stateService: StateService
+    
   ) {}
 
   ngOnInit() {
@@ -35,16 +37,19 @@ export class LoginComponent implements OnInit {
   }
 
   onClick() {
+
+    this.signingIn=true;
     if (this.loginForm.valid) {
       const formData = this.loginForm.value;
 
 
 
 
-setTimeout(function() {
-  window.close();
-}, 3000);
-      this.api.postLogin(formData).subscribe((response:{token:string,user: LoginUser}) => {
+
+      this.api.postLogin({
+        email:formData.emailId,
+        password:formData.password
+      }).subscribe((response:{token:string,user: LoginUser}) => {
 
         if (response.user.userId) {
           this.stateService.userId = response.user.userId;
@@ -60,7 +65,11 @@ setTimeout(function() {
         if (response.token) {
           this.setAuthTokenInSessionCookie(response.token);
         }
-
+          this.signingIn=false;
+          this.completed=true;
+        setTimeout(function() {
+      
+        }, 3000);
      
         this.router.navigate(['/chat']);
       

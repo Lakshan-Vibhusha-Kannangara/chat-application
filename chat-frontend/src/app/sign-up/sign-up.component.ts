@@ -3,8 +3,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
-import { LoginResponse } from '../../utilites/interfaces/interface';
-import { ApiService } from 'Services/api.service';
+import { LoginResponse } from '../utilites/interfaces/interface';
+import { ApiService } from 'src/app/Services/api.service';
 import { ImageUploadComponent } from '../image-upload/image-upload.component';
 
 @Component({
@@ -42,6 +42,7 @@ throw new Error('Method not implemented.');
       fullName: [null, Validators.required],
       emailId: [null, Validators.required],
       password: [null, Validators.required],
+      avatar:[null, Validators.required],
     });
   }
 
@@ -51,7 +52,7 @@ throw new Error('Method not implemented.');
     this.api
       .postUser({
         name: formData.fullName,
-        emailId: formData.emailId,
+        email: formData.emailId,
         password: formData.password,
         avatar: this.imageData,
       })

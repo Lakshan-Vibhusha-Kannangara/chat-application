@@ -67,7 +67,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AnyOrigin");
-app.UseAuthentication(); // Use authentication before authorization
+app.UseAuthentication();    
 app.UseAuthorization();
 
 app.MapControllers();

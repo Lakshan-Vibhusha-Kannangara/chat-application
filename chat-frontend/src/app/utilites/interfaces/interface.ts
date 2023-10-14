@@ -27,13 +27,20 @@ export interface ChatData {
 export interface LoginUser {
   userId?: number;
   name?: string;
-  emailId?: string;
+  email?: string;
   password?: string;
    avatar?: string;
   createdDate?: string;
   token?: string;
 }
+export interface SendUser {
 
+  name: string;
+  email: string;
+  password: string;
+   avatar?: string;
+
+}
 export interface LoginResponse{
   token:string;
   user:LoginUser;
@@ -41,7 +48,7 @@ export interface LoginResponse{
 export interface User {
   id?: number;
   fullName?: string;
-  emailId: string;
+  email: string;
   password: string;
   designation?: string;
   createdDate?: string;

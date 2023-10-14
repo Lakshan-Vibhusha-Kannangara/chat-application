@@ -1,51 +1,47 @@
-<div
-  *ngIf="message?.recipientId == targetUserID"
-  class="d-flex justify-content-start mb-4"
->
+<div *ngIf="message?.recipientId == targetUserID" class="d-flex justify-content-start mb-4">
   <div class="img_cont_msg">
-    <img
-      src={{this.profilePic}}
-      class="rounded-circle user_img_msg"
-    />
+    <img src="{{ this.profilePic }}" class="rounded-circle user_img_msg" />
   </div>
-  <div class="msg_cotainer">
-    <div class="ms-3 " style="border-radius: 15px;" *ngIf="message?.attachment">
+<div class="msg_cotainer_send">
+
+  <div style="margin-bottom: -1vh;">
+    <div class="ms-3" style="border-radius: 15p;margin-bottom: -1vh;" *ngIf="message?.attachment">
       <div class="bg-image" *ngIf="message?.attachment">
-        <app-image-modal [modalImageUrl]="message?.attachment" ></app-image-modal>
-    
+        <app-image-modal [modalImageUrl]="message.attachment"></app-image-modal>
         <a href="#!">
           <div class="mask"></div>
         </a>
       </div>
     </div>
-    <span class="msg_time" style="white-space: nowrap;">{{ formattedTimestamp }}</span>
- 
-    <p class="msg">   {{ message?.text }}</p>
+
+    <p class="msg">{{ message.text }}</p>
   </div>
+  <span class="msg_time" style="white-space: nowrap">{{ formattedTimestamp }}</span>
 </div>
-<div
-  *ngIf="message?.recipientId != targetUserID"
-  class="d-flex justify-content-end mb-4"
->    <div class="ms-3 " style="border-radius: 15px;" *ngIf="message?.attachment">
+</div>
+
+<div *ngIf="message?.recipientId != targetUserID" class="d-flex justify-content-end mb-4">
+
+<div class="msg_cotainer"> 
+ <div class="ms-3" style="border-radius: 15px;margin-bottom: -1vh" *ngIf="message?.attachment">
   <div class="bg-image" *ngIf="message?.attachment">
-    <app-image-modal [modalImageUrl]="message.attachment" ></app-image-modal>
-    
+    <app-image-modal [modalImageUrl]="message.attachment"></app-image-modal>
     <a href="#!">
       <div class="mask"></div>
     </a>
   </div>
 </div>
-  <div class="msg_cotainer_send">
-    {{ message?.text }}
-    <span class="msg_time_send" style="white-space: nowrap;">{{ formattedTimestamp }}</span>
+<div>
+  {{ message.text }}
 
-
-  </div>
-  <div class="img_cont_msg">
-    <img
-      src={{user?.avatar}}
-      class="rounded-circle user_img_msg"
-    />
-  </div>
 </div>
-<div class="d-flex flex-row justify-content-start mb-4"></div>
+<span class="msg_time_send" style="white-space: nowrap">{{ formattedTimestamp }}</span>
+</div>
+<div class="img_cont_msg">
+  <img src="{{ user.avatar }}" class="rounded-circle user_img_msg" />
+</div>
+</div>
+
+
+
+

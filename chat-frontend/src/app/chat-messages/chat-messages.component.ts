@@ -1,39 +1,57 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup, FormArray, FormControl, Form } from '@angular/forms';
 import {
   ChatData,
   ChatMessage,
-  ChatUser,
   User,
-} from '../../utilites/interfaces/interface';
-import { StateService } from '../../../Services/state.service';
-import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { ApiService } from 'Services/api.service';
+} from '../utilites/interfaces/interface';
+import { StateService } from '../Services/state.service';
+import { ApiService } from 'src/app/Services/api.service';
+import { SignalRService } from '../Services/signal-r.service';
 
 @Component({
   selector: 'app-chat-messages',
   templateUrl: './chat-messages.component.html',
   styleUrls: ['./chat-messages.component.css'],
 })
-export class ChatMessagesComponent implements OnInit {
+export class ChatMessagesComponent implements OnInit, OnDestroy {
   callClick() {
     console.log('clicked');
-   this.stateService.setCalling(true)// Toggle the value of showAppCall
+    this.stateService.setCalling(true); // Toggle the value of showAppCall
   }
-  send:boolean=false;
+
+  send: boolean = false;
   showAppCall: boolean = false;
   chats: ChatData = { conversations: [] };
   fileString!: string;
   textMessage = '';
-  users: { [key: number]: User } = {};
+  users!: { [key: number]: User };
   userName = '';
   targetUserId!: number;
+  messages: { user: string; message: ChatMessage }[] = [];
+  messageArray! :FormArray;
   messagesForm!: FormGroup;
   filteredMessages: ChatMessage[] = [];
   selectedFileName: string = '';
   noOfMessages!: number;
-  selectedUser!:number;
-  constructor(private stateService: StateService, private api: ApiService) {}
+  selectedUser!: number;
+  usersInRoom: string[] = [];
 
+  // Define a map to keep track of whether you are listening to messages for each user.
+  private listeningMap: { [key: string]: boolean } = {};
+
+  private usersSubscription!: Subscription;
+  private selectedUserSubscription!: Subscription;
+  private callingSubscription!: Subscription;
+  private chatsSubscription!: Subscription;
+  private searchSubscription!: Subscription;
+
+  constructor(
+    private stateService: StateService,
+    private api: ApiService,
+    private signalRService: SignalRService
+  ) {}
   onFileSelected(event: any) {
     const file = event.target.files[0];
     this.selectedFileName = file.name;
@@ -41,46 +59,116 @@ export class ChatMessagesComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.fileString = e.target.result;
-        console.log(e.target.result);
+   
       };
       reader.readAsDataURL(file);
     }
   }
   ngOnInit() {
-    this.stateService.selectedUser$.subscribe((val:any)=>{
-     this.selectedUser=val;
-    })
+
     this.initForm();
-    this.stateService.calling$.subscribe((calling: any) => {
-      console.log("calling value.........",calling)
-      this.showAppCall = calling;
+
+    this.signalRService.listenToUsersInRoom((users) => {
+      this.usersInRoom = users;
     });
+
+    this.signalRService.listenToMessages((user, message: string) => {
+      const parsedMessage: ChatMessage = JSON.parse(message);
+      console.log('user here', user);
+      this.messages.push({ user, message: parsedMessage });
+      const targetUserChat = this.chats.conversations.find(
+        (chatUser) => chatUser.id === parseInt(user, 10)
+      );
+      if (targetUserChat) {
+        this.filteredMessages = targetUserChat.messages;
+    
+
+        this.noOfMessages = targetUserChat.messages.length;
+        if (message !== undefined) {
+          const control = new FormControl({
+            id: 0,
+            text: parsedMessage.text,
+            selected: false,
+            senderId: parsedMessage.senderId,
+            recipientId: parsedMessage.recipientId,
+            timestamp: parsedMessage.timestamp,
+            attachment: parsedMessage.attachment,
+          });
+          console.log('selected user', this.selectedUser);
+          console.log('sent msg user', user);
+          if (this.selectedUser == parseInt(user, 10)) {
+            this.messageArray.push(control);
+          }
+        }
+        targetUserChat.messages.push({
+          id: 0,
+          text: parsedMessage.text,
+
+          senderId: parsedMessage.senderId,
+          recipientId: parsedMessage.recipientId,
+          timestamp: parsedMessage.timestamp,
+          attachment: parsedMessage.attachment,
+        });
+      }
+    });
+
+    this.selectedUserSubscription = this.stateService.selectedUser$.subscribe(
+      (val: any) => {
+        this.selectedUser = val;
+     
+      }
+    );
+
+
+    this.callingSubscription = this.stateService.calling$.subscribe(
+      (calling: any) => {
+        console.log('calling value.........', calling);
+        this.showAppCall = calling;
+      }
+    );
+
     this.stateService.selectedUser$.subscribe((user) => {
       this.resetChatState();
       this.targetUserId = user!;
 
-      this.stateService.users$.subscribe((users) => {
+      this.usersSubscription = this.stateService.users$.subscribe((users) => {
         this.users = users;
-        this.stateService.chats$.subscribe((chats: ChatData) => {
-          this.chats = chats;
 
-          this.updateTargetUserAndMessages();
-        });
+        this.chatsSubscription = this.stateService.chats$.subscribe(
+          (chats: ChatData) => {
+            this.chats = chats;
+
+            this.updateTargetUserAndMessages();
+          }
+        );
       });
     });
 
     this.userName = this.stateService.userName;
     this.targetUserId = this.stateService.userId;
 
-    this.stateService.search$.subscribe(() => {
+    this.searchSubscription = this.stateService.search$.subscribe(() => {
       this.resetChatState();
+      this.signalRService.listenToUsersInRoom((users) => {
+        console.log('Users in room:', users);
+      });
     });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe from all subscriptions to prevent memory leaks
+    this.usersSubscription.unsubscribe();
+    this.selectedUserSubscription.unsubscribe();
+    this.callingSubscription.unsubscribe();
+    this.chatsSubscription.unsubscribe();
+    this.searchSubscription.unsubscribe();
   }
 
   initForm() {
     this.messagesForm = new FormGroup({
       messages: new FormArray([]),
     });
+    this.messageArray=this.messagesForm.get('messages') as FormArray;
   }
 
   resetChatState() {
@@ -91,49 +179,79 @@ export class ChatMessagesComponent implements OnInit {
   }
 
   Sending() {
-    this.send=true;
-    const targetUserChat = this.chats.conversations.find(
-      (chatUser) => chatUser.id === this.targetUserId
+    this.signalRService.joinUser(this.stateService.userId, this.targetUserId)
+    this.signalRService.sendMessagetoUser(
+      this.selectedUser,
+      this.stateService.userId,
+      {
+        text: this.textMessage,
+        attachment: "",
+        timestamp: '',
+        senderId: this.stateService.userId,
+        recipientId: this.selectedUser,
+      }
     );
-    const messageArray = this.messagesForm.get('messages') as FormArray;
-    this.api
-      .postMessage({
+      this.api.postMessage({
         text: this.textMessage,
         senderId: this.stateService.userId,
         recipientId: this.targetUserId,
         timestamp: '2023-09-30T12:00:00',
         attachment: this.fileString,
-      })
-      .subscribe((post: ChatMessage) => {
+      }).subscribe((val:any)=>{
+  
+      }
+  
+      ,(error)=>{
+        console.log(error)
+      });
+      const targetUserChat = this.chats.conversations.find(
+        (chatUser) => chatUser.id === this.targetUserId
+      );
+      if (targetUserChat) {
+        this.filteredMessages = targetUserChat.messages;
+    
+  
+        this.noOfMessages = targetUserChat.messages.length;
         const control = new FormControl({
           id: 0,
-          text: post.text,
+          text: this.textMessage,
+          attachment: this.fileString,
+          timestamp: '',
+          senderId: this.stateService.userId,
+          recipientId: this.selectedUser,
           selected: false,
-          senderId: post.senderId,
-          recipientId: post.recipientId,
-          timestamp: post.timestamp,
-          attachment: this.fileString,
         });
-        console.log('this........', post);
-        targetUserChat?.messages.push({
+        this.messageArray.push(control);
+        targetUserChat.messages.push({
           id: 0,
-          text: post.text,
-          senderId: post.senderId,
-          recipientId: post.recipientId,
-          timestamp: post.timestamp,
+          text: this.textMessage,
           attachment: this.fileString,
+          timestamp: '',
+          senderId: this.stateService.userId,
+          recipientId: this.selectedUser,
         });
-        messageArray.push(control);
-        this.noOfMessages += 1;
-        this.textMessage = '';
-      });
-      this.send=false;
-    this.selectedFileName = '';
+      }
+      this.fileString = "";
+      this.selectedFileName="";
+
+    console.log('authorize,', this.selectedUser, this.textMessage);
+    
   }
 
-  onSubmit() {
-    // Handle form submission logic here
+  // Function to create a new message control
+  createMessageControl() {
+    return new FormControl({
+      id: 0,
+      text: this.textMessage,
+      selected: false,
+      senderId: 1,
+      recipientId: this.selectedUser,
+      timestamp: '',
+      attachment: this.fileString,
+    });
   }
+
+  onSubmit() {}
 
   updateTargetUserAndMessages() {
     const targetUserChat = this.chats.conversations.find(
@@ -141,8 +259,8 @@ export class ChatMessagesComponent implements OnInit {
     );
     if (targetUserChat) {
       this.filteredMessages = targetUserChat.messages;
-      const messageArray = this.messagesForm.get('messages') as FormArray;
-      messageArray.clear();
+   
+      this.messageArray.clear();
       this.noOfMessages = targetUserChat.messages.length;
       targetUserChat.messages.forEach((message: ChatMessage, index: number) => {
         if (message !== undefined) {
@@ -155,7 +273,7 @@ export class ChatMessagesComponent implements OnInit {
             timestamp: message.timestamp,
             attachment: message.attachment,
           });
-          messageArray.push(control);
+          this.messageArray.push(control);
         }
       });
     }

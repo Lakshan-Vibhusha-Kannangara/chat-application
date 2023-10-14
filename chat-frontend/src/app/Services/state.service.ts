@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ChatData, User,LoginUser } from '../src/utilites/interfaces/interface'
+import { ChatData, User,LoginUser } from '../utilites/interfaces/interface'
 import { ApiService } from './api.service';
 
 

@@ -1,0 +1,43 @@
+<!-- chat.component.html -->
+<div class="chat-container">
+  <div class="user-list">
+    <h2>Users in Room:</h2>
+    <ul>
+      <li *ngFor="let user of usersInRoom">{{ user }}</li>
+    </ul>
+  </div>
+
+  <div class="message-box">
+    <h2>Chat Room</h2>
+    <div class="message-list">
+      <div *ngFor="let message of messages">
+        <p><strong>{{ message.user }}</strong>: {{ message.message.senderId }}</p>
+        <p><strong>{{ message.user }}</strong>: {{ message.message.recipientId }}</p>
+        <p><strong>{{ message.user }}</strong>: {{ message.message.text }}</p>
+        <p><strong>{{ message.user }}</strong>: {{ message.message.timestamp }}</p>
+      </div>
+    </div>
+    <div class="message-input">
+      <input
+        type="text"
+        placeholder="Enter your message..."
+        [(ngModel)]="newMessage"
+      />
+      <button (click)="sendMessage()">Send Message</button>
+    </div>
+  </div>
+  
+  <div class="user-input">
+    <input
+      type="number"
+      placeholder="Sender ID"
+      [(ngModel)]="senderId"
+    />
+    <input
+      type="number"
+      placeholder="Receiver ID"
+      [(ngModel)]="receiverId"
+    />
+    <button (click)="joinChat()">Join Chat</button>
+  </div>
+</div>
